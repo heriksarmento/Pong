@@ -15,9 +15,13 @@ namespace PongCss
 {
     public partial class Form1 : Form
     {
+        //Global variables
         Timer timer;
         Game game = new Game();
         int i = 0;
+
+
+        //Creating the form and initialize it
         public Form1()
         {
             InitializeComponent();
@@ -27,6 +31,7 @@ namespace PongCss
             timer.Start();
         }
 
+        //Draw method
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -42,17 +47,14 @@ namespace PongCss
             g.FillRectangle(Brushes.White, (float)game.player2.posX , (float)game.player2.posY, 10, game.player2.size*2);
             g.FillRectangle(Brushes.White, (float)game.ball.posX - game.ball.size, (float)game.ball.posY - game.ball.size, game.ball.size * 2, game.ball.size * 2);
         
-        
-        
         }
 
-        private enum PlayerMotionState { NotMoving, MovingUp, MovingDown };
+        // Moviment treatment
+        private enum PlayerMotionState { NotMoving, MovingUp, MovingDown};
         private PlayerMotionState PlayerMotion = PlayerMotionState.NotMoving;
         private PlayerMotionState PlayerMotion2 = PlayerMotionState.NotMoving;
-
         protected override void OnKeyDown(KeyEventArgs e)
-        {
-            
+        {    
             if (e.KeyData == Keys.W)
             {
                 PlayerMotion = PlayerMotionState.MovingUp;
@@ -96,7 +98,7 @@ namespace PongCss
             {
                 timer.Start();
                 if(game.ball.posX == game.player1.posX + 10 + game.ball.size) {
-                    game.dir = true;
+                    game.rightDir = true;
                     switch (e.KeyData)
                     {
                         case Keys.W:
@@ -118,7 +120,7 @@ namespace PongCss
                 }
                 else
                 {
-                    game.dir = false;
+                    game.rightDir = false;
                     switch (e.KeyData)
                     {
                         case Keys.Up:
@@ -157,6 +159,7 @@ namespace PongCss
             base.OnKeyUp(e);
         }
 
+        // Loop of the game
         private void GameLoop_Tick(object sender, EventArgs e)
         {
             if (PlayerMotion == PlayerMotionState.MovingUp)
@@ -227,7 +230,7 @@ namespace PongCss
                 game.scored = false;
                 timer.Stop();
                 game.player1.posY = game.player2.posY = 300 - 20;
-                if (game.dir)
+                if (game.rightDir)
                 {
                     game.ball.posX = game.player1.posX + 10 + game.ball.size;
                     game.ball.posY = game.player1.posY + game.player1.size;
@@ -237,18 +240,9 @@ namespace PongCss
                     game.ball.posX = game.player2.posX - game.ball.size;
                     game.ball.posY = game.player2.posY + game.player2.size;
                 }
-                Invalidate();
             }
-            Invalidate();
-
-
+            Invalidate(); // Send to redraw
         }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
 
     }
 }
